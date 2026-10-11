@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import TarjetaProducto from "../components/TarjetaProducto.jsx";
 import { useSkyOps } from "../context/SkyOpsContext.jsx";
 
-export default function Catalogo() {
+export default function Catalogo({ ofertas = false }) {
   const { datos, agregarProducto } = useSkyOps();
   const [params, setParams] = useSearchParams();
 
@@ -14,7 +14,7 @@ export default function Catalogo() {
 
   const busqueda = params.get("q") || "";
   const categoria = params.get("categoria") || "";
-  const soloOfertas = params.get("ofertas") === "si";
+  const soloOfertas = ofertas || params.get("ofertas") === "si";
 
   const categorias = [
     ...new Set(datos.productos.map((p) => p.categoria)),
@@ -56,7 +56,7 @@ export default function Catalogo() {
 
   return (
     <>
-      <h1>Catálogo de repuestos</h1>
+      <h1>{ofertas ? "Ofertas de repuestos" : "Catálogo de repuestos"}</h1>
 
       <p>Busca por nombre, número de parte o categoría ATA.</p>
 
@@ -93,6 +93,7 @@ export default function Catalogo() {
             id="solo-ofertas"
             label="Solo ofertas"
             checked={soloOfertas}
+            disabled={ofertas}
             onChange={(e) =>
               cambiarFiltro("ofertas", e.target.checked ? "si" : "")
             }

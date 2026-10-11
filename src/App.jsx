@@ -18,6 +18,11 @@ import Login from "./pages/Login.jsx";
 import Registro from "./pages/Registro.jsx";
 import Perfil from "./pages/Perfil.jsx";
 
+import Nosotros from "./pages/Nosotros.jsx";
+import Blog from "./pages/Blog.jsx";
+import DetalleBlog from "./pages/DetalleBlog.jsx";
+import Ofertas from "./pages/Ofertas.jsx";
+
 export default function App() {
   return (
     <Routes>
@@ -35,6 +40,10 @@ export default function App() {
         <Route path="registro" element={<Registro />} />
         <Route element={<Acceso />}><Route path="perfil" element={<Perfil />} /></Route>
         <Route element={<Acceso admin />}><Route path="admin" element={<Admin />} /></Route>
+        <Route path="nosotros" element={<Nosotros />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path="blog/:id" element={<DetalleBlog />} />
+        <Route path="ofertas" element={<Ofertas />} />
         <Route path="contacto" element={<Contacto />} />
 
         <Route
