@@ -1,8 +1,8 @@
 import { Alert, Button } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 
-import ResumenManifiesto from "../components/ResumenManifiesto";
-import { useSkyOps } from "../context/SkyOpsContext";
+import ResumenManifiesto from "../components/ResumenManifiesto.jsx";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
 
 export default function Resultado() {
   const { id } = useParams();

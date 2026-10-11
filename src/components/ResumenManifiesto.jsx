@@ -1,5 +1,5 @@
 import { Table } from "react-bootstrap";
-import { formatoPrecio } from "../utils/negocio";
+import { formatoPrecio } from "../utils/negocio.js";
 
 export default function ResumenManifiesto({ lineas, total }) {
   return (

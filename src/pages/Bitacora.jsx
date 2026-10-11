@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Badge, Button, Form, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { useSkyOps } from "../context/SkyOpsContext";
-import { formatoPrecio } from "../utils/negocio";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
+import { formatoPrecio } from "../utils/negocio.js";
 
 export default function Bitacora() {
   const { datos, resolverPedido } = useSkyOps();

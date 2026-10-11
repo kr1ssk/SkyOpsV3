@@ -1,2 +1,2 @@
-import "./negocio.spec";
-import "./componentes.spec";
+import "./negocio.spec.js";
+import "./componentes.spec.jsx";

@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Alert, Button, Form, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { useSkyOps } from "../context/SkyOpsContext";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
 import {
   calcularTotal,
   formatoPrecio,
   obtenerLineas,
-} from "../utils/negocio";
+} from "../utils/negocio.js";
 
 export default function Manifiesto() {
   const {

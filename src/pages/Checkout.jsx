@@ -6,11 +6,11 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-import Campo from "../components/Campo";
-import ResumenManifiesto from "../components/ResumenManifiesto";
-import { useSkyOps } from "../context/SkyOpsContext";
-import { calcularTotal, obtenerLineas } from "../utils/negocio";
-import { validarCheckout } from "../utils/validaciones";
+import Campo from "../components/Campo.jsx";
+import ResumenManifiesto from "../components/ResumenManifiesto.jsx";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
+import { calcularTotal, obtenerLineas } from "../utils/negocio.js";
+import { validarCheckout } from "../utils/validaciones.js";
 
 export default function Checkout() {
   const { datos, confirmarCompra } = useSkyOps();

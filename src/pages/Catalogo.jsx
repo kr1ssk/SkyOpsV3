@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Alert, Col, Form, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 
-import TarjetaProducto from "../components/TarjetaProducto";
-import { useSkyOps } from "../context/SkyOpsContext";
+import TarjetaProducto from "../components/TarjetaProducto.jsx";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
 
 export default function Catalogo() {
   const { datos, agregarProducto } = useSkyOps();

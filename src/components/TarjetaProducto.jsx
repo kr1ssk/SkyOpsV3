@@ -1,7 +1,7 @@
 import { Badge, Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { formatoPrecio, precioFinal } from "../utils/negocio";
+import { formatoPrecio, precioFinal } from "../utils/negocio.js";
 
 export default function TarjetaProducto({ producto, onAgregar }) {
   return (

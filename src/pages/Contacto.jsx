@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 
-import Campo from "../components/Campo";
-import { useSkyOps } from "../context/SkyOpsContext";
-import { validarContacto } from "../utils/validaciones";
+import Campo from "../components/Campo.jsx";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
+import { validarContacto } from "../utils/validaciones.js";
 
 export default function Contacto() {
   const { guardarContacto } = useSkyOps();

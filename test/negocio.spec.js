@@ -1,4 +1,4 @@
-import { crearDatosIniciales } from "../src/data/semilla";
+import { crearDatosIniciales } from "../src/data/semilla.js";
 
 import {
   agregarAlCarrito,
@@ -7,13 +7,13 @@ import {
   precioFinal,
   procesarCompra,
   quitarDelCarrito,
-} from "../src/utils/negocio";
+} from "../src/utils/negocio.js";
 
 import {
   validarCheckout,
   validarContacto,
   validarProducto,
-} from "../src/utils/validaciones";
+} from "../src/utils/validaciones.js";
 
 describe("Funciones de negocio de SkyOps", () => {
   let datos;

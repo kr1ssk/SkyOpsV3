@@ -5,14 +5,14 @@ import {
   useState,
 } from "react";
 
-import { crearDatosIniciales } from "../data/semilla";
+import { crearDatosIniciales } from "../data/semilla.js";
 import {
   agregarAlCarrito,
   cambiarCantidad,
   quitarDelCarrito,
   procesarCompra,
-} from "../utils/negocio";
-import { validarProducto, validarCheckout } from "../utils/validaciones";
+} from "../utils/negocio.js";
+import { validarProducto, validarCheckout } from "../utils/validaciones.js";
 
 export const SkyOpsContext = createContext(null);
 const CLAVE = "skyops_v3";

@@ -1,17 +1,17 @@
 import { Link, Route, Routes } from "react-router-dom";
 
-import Layout from "./components/Layout";
-import Inicio from "./pages/Inicio";
-import Catalogo from "./pages/Catalogo";
-import Categorias from "./pages/Categorias";
-import Detalle from "./pages/Detalle";
-import Manifiesto from "./pages/Manifiesto";
-import Checkout from "./pages/Checkout";
-import Resultado from "./pages/Resultado";
-import Flota from "./pages/Flota";
-import Bitacora from "./pages/Bitacora";
-import Admin from "./pages/Admin";
-import Contacto from "./pages/Contacto";
+import Layout from "./components/Layout.jsx";
+import Inicio from "./pages/Inicio.jsx";
+import Catalogo from "./pages/Catalogo.jsx";
+import Categorias from "./pages/Categorias.jsx";
+import Detalle from "./pages/Detalle.jsx";
+import Manifiesto from "./pages/Manifiesto.jsx";
+import Checkout from "./pages/Checkout.jsx";
+import Resultado from "./pages/Resultado.jsx";
+import Flota from "./pages/Flota.jsx";
+import Bitacora from "./pages/Bitacora.jsx";
+import Admin from "./pages/Admin.jsx";
+import Contacto from "./pages/Contacto.jsx";
 
 export default function App() {
   return (

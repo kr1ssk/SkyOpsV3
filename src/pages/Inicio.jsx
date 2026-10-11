@@ -1,7 +1,7 @@
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { useSkyOps } from "../context/SkyOpsContext";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
 
 export default function Inicio() {
   const { datos } = useSkyOps();

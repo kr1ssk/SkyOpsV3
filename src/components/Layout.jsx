@@ -6,7 +6,7 @@ import {
 } from "react-bootstrap";
 import { Link, NavLink, Outlet } from "react-router-dom";
 
-import { useSkyOps } from "../context/SkyOpsContext";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
 
 export default function Layout() {
   const { datos, errorAlmacenamiento } = useSkyOps();

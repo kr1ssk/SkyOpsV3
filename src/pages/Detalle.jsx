@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Alert, Badge, Button, Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 
-import { useSkyOps } from "../context/SkyOpsContext";
-import { formatoPrecio, precioFinal } from "../utils/negocio";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
+import { formatoPrecio, precioFinal } from "../utils/negocio.js";
 
 export default function Detalle() {
   const { id } = useParams();

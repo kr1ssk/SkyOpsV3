@@ -8,10 +8,10 @@ import {
   Table,
 } from "react-bootstrap";
 
-import Campo from "../components/Campo";
-import { useSkyOps } from "../context/SkyOpsContext";
-import { formatoPrecio } from "../utils/negocio";
-import { validarProducto } from "../utils/validaciones";
+import Campo from "../components/Campo.jsx";
+import { useSkyOps } from "../context/SkyOpsContext.jsx";
+import { formatoPrecio } from "../utils/negocio.js";
+import { validarProducto } from "../utils/validaciones.js";
 
 const formularioInicial = {
   id: null,

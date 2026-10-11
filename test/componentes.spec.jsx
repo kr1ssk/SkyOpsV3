@@ -1,11 +1,11 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import App from "../src/App";
-import Campo from "../src/components/Campo";
-import TarjetaProducto from "../src/components/TarjetaProducto";
-import ResumenManifiesto from "../src/components/ResumenManifiesto";
-import { SkyOpsContext, SkyOpsProvider } from "../src/context/SkyOpsContext";
-import { crearDatosIniciales } from "../src/data/semilla";
+import App from "../src/App.jsx";
+import Campo from "../src/components/Campo.jsx";
+import TarjetaProducto from "../src/components/TarjetaProducto.jsx";
+import ResumenManifiesto from "../src/components/ResumenManifiesto.jsx";
+import { SkyOpsContext, SkyOpsProvider } from "../src/context/SkyOpsContext.jsx";
+import { crearDatosIniciales } from "../src/data/semilla.js";
 
 describe("Componentes de SkyOps", () => {
   let contexto;
