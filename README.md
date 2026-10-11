@@ -1,98 +1,81 @@
 # SkyOpsV3
 
 Proyecto académico de **Fullstack II (DSY1104), Duoc UC**.
+Integrantes: Agustín Boeri y Cristian Rivera.
 
-Migración de SkyOpsV2 a React. Permite consultar repuestos aeronáuticos,
-preparar un manifiesto de compra y completar un checkout simulado.
+Tienda simulada de repuestos aeronáuticos, adaptada desde SkyOpsV2.
+React, Vite, React Router, Bootstrap, React Bootstrap, Jasmine y Karma.
 
-## Integrantes
+## Ejecutar en tu PC
+Requisitos: Node.js 24, npm y Google Chrome para las pruebas.
+Desde la carpeta que contiene package.json:
 
-- Agustín Boeri.
-- Cristian Rivera.
-
-## Ejecutar el proyecto
-
-Requisitos: Node.js 24 y npm. Google Chrome para ejecutar las pruebas.
-
-```bash
+```powershell
+git pull --ff-only
 npm ci
+npm test
+npm run build
 npm run dev
 ```
 
-Abrir la dirección que indique Vite en la terminal.
+Si descargaste el ZIP, comienza en `npm ci`.
+Abre la dirección que muestre Vite. Detén el servidor con Ctrl+C.
+`npm run preview` permite revisar la compilación de producción.
 
-## Comprobar el proyecto
+## Cuenta de demostración
+- Correo: **admin@skyops.cl**
+- Contraseña: **Skyops123**
 
-```bash
-npm test
-npm run build
-```
+El registro crea cuentas con rol cliente. La cuenta administradora permite gestionar el catálogo, categorías y usuarios.
+Todas las cuentas y contraseñas son ficticias y se guardan en el navegador. No usar datos ni claves reales.
 
-Las pruebas generan el informe `coverage/index.html`.
-`npm run preview` permite revisar la compilación.
+## Funcionalidades del anexo
+- Inicio, catálogo, detalle, categorías y ofertas.
+- Nosotros, blog con dos publicaciones y sus detalles, contacto.
+- Registro, login, cierre de sesión y perfil editable.
+- Historial de compras de cada cuenta y datos de perfil precargados en checkout.
+- Manifiesto: cantidades, descuentos, subtotales y control de stock.
+- Checkout: datos del responsable, dirección, aeropuerto y forma de entrega.
+- Compra aprobada/rechazada y comprobante con resumen.
+- Dashboard administrativo, CRUD de productos, categorías y usuarios.
+- Órdenes y comprobantes, stock crítico y reportes calculados.
+- Consulta de flota conservada del caso SkyOps.
+- Persistencia con localStorage y diseño responsivo con Bootstrap.
 
-## Funcionalidades
-
-- Catálogo con búsqueda, categorías y ofertas.
-- Detalle de repuestos y certificación.
-- Manifiesto con cantidades, subtotales y control de stock.
-- Checkout con validación del responsable y datos de entrega.
-- Resultado de compra aprobada o rechazada.
-- Bitácora de pedidos con filtro por estado.
-- Administración del catálogo: crear, consultar, editar y eliminar.
-- Consulta de flota y formulario de contacto.
-- Persistencia de datos mediante localStorage.
-- Diseño responsivo con Bootstrap y React Bootstrap.
+No hay pagos reales ni correo enviado. El comprobante no constituye una boleta tributaria.
+La certificación de un repuesto es un dato de ejemplo y debe verificarse fuera de esta aplicación.
 
 ## Estructura
-
 ```text
-public/assets/img/   Imágenes originales de SkyOpsV2
-src/components/      Componentes reutilizables
-src/context/         Estado compartido y persistencia
-src/data/            Productos y flota iniciales
-src/pages/           Páginas de la aplicación
-src/utils/           Reglas de compra y validaciones
-test/                Pruebas de lógica y componentes
-docs/                ERS e informe de pruebas
+public/assets/img/   Imágenes recuperadas de SkyOpsV2
+src/components/      Campos, tarjetas, resumen, formularios y layouts
+src/context/         Estado compartido, sesión y persistencia
+src/data/            Semilla, publicaciones y funciones CRUD
+src/pages/           Vistas públicas y administrativas
+src/utils/           Compra, validaciones y reportes
+test/                Diez pruebas de componentes
+docs/                ERS e informe de testing
 ```
 
-## Tecnologías
+Los datos se guardan bajo la clave `skyops_v3`. Se conservan los productos y pedidos guardados por versiones anteriores.
+El almacenamiento depende del navegador y del origen (dirección/puerto). No se sincroniza entre equipos.
 
-React, Vite, React Router, Bootstrap, React Bootstrap, Jasmine y Karma.
+## Pruebas
+`npm test` ejecuta **10 pruebas de componentes** con Jasmine y Karma, usando el proveedor real de datos.
+Se simulan únicamente localStorage y las confirmaciones del navegador.
+Los casos cubren catálogo, manifiesto, cuentas, acceso, compra, administración y persistencia/reportes.
 
-## Datos y alcance
+El informe se genera en `coverage/index.html`. La cobertura mide código ejecutado; no es la nota ni prueba que no existan errores.
+Los resultados y límites están en [el informe de testing](docs/COBERTURA-TESTING.md).
 
-Los datos iniciales están en `src/data/semilla.js`.
-Los precios son ejemplos académicos. Las imágenes se recuperaron de
-[SkyOpsV2](https://github.com/kr1ssk/SkyOpsV2/tree/04efbe37a9f3fcf1a834c32cb853c5b34beeee9b/assets/img).
-
-Los cambios se guardan con la clave `skyops_v3` de localStorage.
-La compra y el pago son simulados. Contacto registra consultas en el
-navegador y no envía correo. Resolver un pedido no certifica una aeronave.
-
-## Documentación
-
+## Documentación y entrega
 - [ERS V2](docs/ERS-V2.md).
-- [Informe de pruebas y cobertura](docs/COBERTURA-TESTING.md).
+- [Documento de testing y cobertura](docs/COBERTURA-TESTING.md).
+- [Repositorio público](https://github.com/kr1ssk/SkyOpsV3).
 
-GitHub Actions ejecuta las pruebas y la compilación en cada cambio de código.
-La cobertura queda disponible como artefacto de la ejecución.
+GitHub Actions instala las versiones de package-lock, ejecuta pruebas y compila.
+Conserva cobertura y frontend compilado como artefactos descargables.
 Los cambios exclusivamente en Markdown no repiten las pruebas.
 
-package-lock.json conserva las versiones verificadas. npm ci instala esas
-versiones. Si agregas una dependencia con npm install, sube también el
-package-lock.json actualizado.
-
-## Resultados de verificación
-
-El 11 de octubre de 2026 se comprobaron:
-
-- **26 pruebas aprobadas** con Jasmine y Karma.
-- **Compilación de producción correcta** con Vite.
-- Cobertura de líneas: **60,22 %**.
-
-[Ver ejecución y descargar cobertura](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166824417).
-
-Las comprobaciones visuales en distintos tamaños de pantalla se registran
-por separado en el informe de pruebas.
+La fuente de datos es simulada, según el cuerpo del anexo. La frase final sobre integración con backend requiere confirmación docente y no se declara implementada.
+Las imágenes originales provienen de [SkyOpsV2](https://github.com/kr1ssk/SkyOpsV2/tree/04efbe37a9f3fcf1a834c32cb853c5b34beeee9b/assets/img).
