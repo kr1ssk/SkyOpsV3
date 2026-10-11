@@ -19,6 +19,10 @@ jobs:
       - name: Instalar dependencias
         run: npm install --no-audit --no-fund
 
+      - name: Registrar archivo de versiones
+        run: |
+          node -e "const fs = require('node:fs'); const zlib = require('node:zlib'); console.log('SKYOPS_LOCK=' + zlib.gzipSync(fs.readFileSync('package-lock.json')).toString('base64'));"
+
       - name: Ejecutar pruebas y cobertura
         run: npm test
         env:
