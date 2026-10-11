@@ -26,6 +26,11 @@ import Ofertas from "./pages/Ofertas.jsx";
 import AdminCategorias from "./pages/AdminCategorias.jsx";
 import AdminUsuarios from "./pages/AdminUsuarios.jsx";
 
+import LayoutAdmin from "./components/LayoutAdmin.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import StockCritico from "./pages/StockCritico.jsx";
+import Reportes from "./pages/Reportes.jsx";
+
 export default function App() {
   return (
     <Routes>
@@ -38,14 +43,21 @@ export default function App() {
         <Route path="checkout" element={<Checkout />} />
         <Route path="resultado/:id" element={<Resultado />} />
         <Route path="flota" element={<Flota />} />
-        <Route path="bitacora" element={<Bitacora />} />
+
         <Route path="login" element={<Login />} />
         <Route path="registro" element={<Registro />} />
         <Route element={<Acceso />}><Route path="perfil" element={<Perfil />} /></Route>
         <Route element={<Acceso admin />}>
-          <Route path="admin" element={<Admin />} />
-          <Route path="admin/categorias" element={<AdminCategorias />} />
-          <Route path="admin/usuarios" element={<AdminUsuarios />} />
+          <Route path="admin" element={<LayoutAdmin />}>
+            <Route index element={<Dashboard />} />
+            <Route path="productos" element={<Admin />} />
+            <Route path="categorias" element={<AdminCategorias />} />
+            <Route path="usuarios" element={<AdminUsuarios />} />
+            <Route path="ordenes" element={<Bitacora />} />
+            <Route path="stock" element={<StockCritico />} />
+            <Route path="reportes" element={<Reportes />} />
+          </Route>
+          <Route path="bitacora" element={<Bitacora />} />
         </Route>
         <Route path="nosotros" element={<Nosotros />} />
         <Route path="blog" element={<Blog />} />

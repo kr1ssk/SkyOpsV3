@@ -104,7 +104,7 @@ describe("Componentes de SkyOps", () => {
   });
 
   it("C08 envía un producto válido desde administración", () => {
-    mostrarPagina("/admin");
+    mostrarPagina("/admin/productos");
     escribir("Nombre", "Filtro aeronáutico");
     escribir("Número de parte", "PN-001");
     escribir("Categoría ATA", "ATA 27");
@@ -156,7 +156,7 @@ describe("Componentes de SkyOps", () => {
   });
 
   it("C13 permite editar un producto existente", () => {
-    mostrarPagina("/admin");
+    mostrarPagina("/admin/productos");
     fireEvent.click(screen.getAllByRole("button", { name: "Editar" })[0]);
     escribir("Precio en CLP", "900000");
     fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
@@ -167,7 +167,7 @@ describe("Componentes de SkyOps", () => {
 
   it("C14 solicita confirmación antes de eliminar un producto", () => {
     spyOn(window, "confirm").and.returnValue(true);
-    mostrarPagina("/admin");
+    mostrarPagina("/admin/productos");
     fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[0]);
     expect(contexto.borrarProducto).toHaveBeenCalledWith(1);
   });

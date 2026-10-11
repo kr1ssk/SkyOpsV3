@@ -8,6 +8,8 @@ import {
   Table,
 } from "react-bootstrap";
 
+import { Link } from "react-router-dom";
+
 import Campo from "../components/Campo.jsx";
 import { useSkyOps } from "../context/SkyOpsContext.jsx";
 import { formatoPrecio } from "../utils/negocio.js";
@@ -270,6 +272,7 @@ export default function Admin() {
 
                     <td>
                       <div className="d-flex gap-2 flex-wrap">
+                        <Button as={Link} to={"/catalogo/" + producto.id} size="sm" variant="outline-secondary">Ver</Button>
                         <Button
                           size="sm"
                           variant="outline-primary"

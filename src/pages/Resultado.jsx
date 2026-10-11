@@ -6,7 +6,7 @@ import { useSkyOps } from "../context/SkyOpsContext.jsx";
 
 export default function Resultado() {
   const { id } = useParams();
-  const { datos } = useSkyOps();
+  const { datos, usuario } = useSkyOps();
 
   const pedido = datos.pedidos.find((p) => p.id === id);
 
@@ -14,7 +14,7 @@ export default function Resultado() {
     return (
       <>
         <h1>Pedido no encontrado</h1>
-        <Link to="/bitacora">Ver bitácora</Link>
+        <Link to={usuario?.rol === "admin" ? "/admin/ordenes" : "/perfil"}>Ver historial</Link>
       </>
     );
   }
@@ -33,6 +33,7 @@ export default function Resultado() {
           : "La compra fue registrada y el stock fue actualizado."}
       </Alert>
 
+      <p className="text-secondary">Comprobante de compra simulada. No constituye una boleta tributaria.</p>
       <p><strong>Folio:</strong> {pedido.id}</p>
       <p>
         <strong>Fecha:</strong>{" "}
