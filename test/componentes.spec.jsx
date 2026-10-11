@@ -13,6 +13,7 @@ describe("Componentes de SkyOps", () => {
   beforeEach(() => {
     contexto = {
       datos: crearDatosIniciales(),
+      usuario: { id: "admin-demo", rol: "admin", nombre: "Admin" },
       errorAlmacenamiento: "",
       agregarProducto: jasmine.createSpy("agregarProducto"),
       actualizarCantidad: jasmine.createSpy("actualizarCantidad"),

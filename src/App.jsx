@@ -13,6 +13,11 @@ import Bitacora from "./pages/Bitacora.jsx";
 import Admin from "./pages/Admin.jsx";
 import Contacto from "./pages/Contacto.jsx";
 
+import Acceso from "./components/Acceso.jsx";
+import Login from "./pages/Login.jsx";
+import Registro from "./pages/Registro.jsx";
+import Perfil from "./pages/Perfil.jsx";
+
 export default function App() {
   return (
     <Routes>
@@ -26,7 +31,10 @@ export default function App() {
         <Route path="resultado/:id" element={<Resultado />} />
         <Route path="flota" element={<Flota />} />
         <Route path="bitacora" element={<Bitacora />} />
-        <Route path="admin" element={<Admin />} />
+        <Route path="login" element={<Login />} />
+        <Route path="registro" element={<Registro />} />
+        <Route element={<Acceso />}><Route path="perfil" element={<Perfil />} /></Route>
+        <Route element={<Acceso admin />}><Route path="admin" element={<Admin />} /></Route>
         <Route path="contacto" element={<Contacto />} />
 
         <Route
