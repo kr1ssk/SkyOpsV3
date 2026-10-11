@@ -6,9 +6,7 @@ import { useSkyOps } from "../context/SkyOpsContext.jsx";
 export default function Categorias() {
   const { datos } = useSkyOps();
 
-  const categorias = [
-    ...new Set(datos.productos.map((p) => p.categoria)),
-  ];
+  const categorias = datos.categorias.map(c => c.nombre);
 
   return (
     <>

@@ -153,13 +153,14 @@ export default function Admin() {
               error={errores.pn}
             />
 
-            <Campo
-              id="producto-categoria"
-              label="Categoría ATA"
-              value={formulario.categoria}
-              onChange={(e) => cambiar("categoria", e.target.value)}
-              error={errores.categoria}
-            />
+            <Form.Group className="mb-3" controlId="producto-categoria">
+              <Form.Label>Categoría ATA</Form.Label>
+              <Form.Select value={formulario.categoria} onChange={e => cambiar("categoria", e.target.value)} isInvalid={Boolean(errores.categoria)}>
+                <option value="">Selecciona una categoría</option>
+                {datos.categorias.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">{errores.categoria}</Form.Control.Feedback>
+            </Form.Group>
 
             <Campo
               id="producto-descripcion"

@@ -107,7 +107,7 @@ describe("Componentes de SkyOps", () => {
     mostrarPagina("/admin");
     escribir("Nombre", "Filtro aeronáutico");
     escribir("Número de parte", "PN-001");
-    escribir("Categoría ATA", "ATA 28");
+    escribir("Categoría ATA", "ATA 27");
     escribir("Descripción", "Filtro para mantenimiento.");
     escribir("Ubicación", "Bodega SCL");
     escribir("Stock", "3");

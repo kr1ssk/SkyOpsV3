@@ -23,6 +23,9 @@ import Blog from "./pages/Blog.jsx";
 import DetalleBlog from "./pages/DetalleBlog.jsx";
 import Ofertas from "./pages/Ofertas.jsx";
 
+import AdminCategorias from "./pages/AdminCategorias.jsx";
+import AdminUsuarios from "./pages/AdminUsuarios.jsx";
+
 export default function App() {
   return (
     <Routes>
@@ -39,7 +42,11 @@ export default function App() {
         <Route path="login" element={<Login />} />
         <Route path="registro" element={<Registro />} />
         <Route element={<Acceso />}><Route path="perfil" element={<Perfil />} /></Route>
-        <Route element={<Acceso admin />}><Route path="admin" element={<Admin />} /></Route>
+        <Route element={<Acceso admin />}>
+          <Route path="admin" element={<Admin />} />
+          <Route path="admin/categorias" element={<AdminCategorias />} />
+          <Route path="admin/usuarios" element={<AdminUsuarios />} />
+        </Route>
         <Route path="nosotros" element={<Nosotros />} />
         <Route path="blog" element={<Blog />} />
         <Route path="blog/:id" element={<DetalleBlog />} />
