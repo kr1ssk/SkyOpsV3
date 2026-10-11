@@ -13,6 +13,7 @@ import {
   procesarCompra,
 } from "../utils/negocio.js";
 import { guardarProducto as guardarProductoEnDatos, borrarProducto as borrarProductoEnDatos } from "../data/repositorio.js";
+import * as repositorio from "../data/repositorio.js";
 import { validarCheckout } from "../utils/validaciones.js";
 
 export const SkyOpsContext = createContext(null);
@@ -40,7 +41,10 @@ function leerDatos() {
       return crearDatosIniciales();
     }
 
-    return datos;
+    const iniciales = crearDatosIniciales();
+    return { ...datos, usuarios: Array.isArray(datos.usuarios) ? datos.usuarios : iniciales.usuarios,
+      categorias: Array.isArray(datos.categorias) ? datos.categorias : [...new Set(datos.productos.map(p => p.categoria))].map(nombre => ({ id: nombre, nombre })),
+      sesionId: datos.sesionId || null };
   } catch {
     return crearDatosIniciales();
   }
@@ -60,6 +64,27 @@ export function SkyOpsProvider({ children }) {
       );
     }
   }, [datos]);
+
+  const usuario = datos.usuarios.find(u => u.id === datos.sesionId) || null;
+
+  function exigirAdmin() {
+    if (usuario?.rol !== "admin") throw new Error("Se requiere una cuenta administradora.");
+  }
+
+  function registrarUsuario(formulario) {
+    setDatos(repositorio.guardarUsuario(datos, { ...formulario, id: null, rol: "cliente" }));
+  }
+
+  function iniciarSesion(correo, clave) { setDatos(repositorio.iniciarSesion(datos, correo, clave)); }
+  function cerrarSesion() { setDatos({ ...datos, sesionId: null }); }
+  function guardarUsuario(formulario) { exigirAdmin(); setDatos(repositorio.guardarUsuario(datos, formulario)); }
+  function borrarUsuario(id) { exigirAdmin(); setDatos(repositorio.borrarUsuario(datos, id)); }
+  function guardarCategoria(formulario) { exigirAdmin(); setDatos(repositorio.guardarCategoria(datos, formulario)); }
+  function borrarCategoria(id) { exigirAdmin(); setDatos(repositorio.borrarCategoria(datos, id)); }
+  function actualizarPerfil(formulario) {
+    if (!usuario) throw new Error("Inicia sesión.");
+    setDatos(repositorio.guardarUsuario(datos, { ...usuario, ...formulario, id: usuario.id, rol: usuario.rol }));
+  }
 
   function agregarProducto(productoId) {
     const carrito = agregarAlCarrito(
@@ -106,7 +131,7 @@ export function SkyOpsProvider({ children }) {
 
     const resultado = procesarCompra(
       datos,
-      entregaNormalizada,
+      { ...entregaNormalizada, usuarioId: usuario?.id || null },
       aprobada
     );
 
@@ -116,14 +141,17 @@ export function SkyOpsProvider({ children }) {
   }
 
   function guardarProducto(producto) {
+    exigirAdmin();
     setDatos(guardarProductoEnDatos(datos, producto));
   }
 
   function borrarProducto(productoId) {
+    exigirAdmin();
     setDatos(borrarProductoEnDatos(datos, productoId));
   }
 
   function resolverPedido(pedidoId) {
+    exigirAdmin();
     const pedidos = datos.pedidos.map((pedido) =>
       pedido.id === pedidoId && pedido.estado === "Pendiente"
         ? { ...pedido, estado: "Resuelto" }
@@ -150,6 +178,8 @@ export function SkyOpsProvider({ children }) {
     <SkyOpsContext.Provider
       value={{
         datos,
+        usuario, registrarUsuario, iniciarSesion, cerrarSesion, actualizarPerfil,
+        guardarUsuario, borrarUsuario, guardarCategoria, borrarCategoria,
         errorAlmacenamiento,
         agregarProducto,
         actualizarCantidad,

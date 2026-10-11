@@ -81,5 +81,8 @@ export function crearDatosIniciales() {
     carrito: [],
     pedidos: [],
     contactos: [],
+    categorias: ["ATA 27", "ATA 32", "ATA 72"].map(nombre => ({ id: nombre, nombre })),
+    usuarios: [{ id: "admin-demo", nombre: "Administrador SkyOps", correo: "admin@skyops.cl", clave: "Skyops123", rol: "admin", direccion: "", licencia: "" }],
+    sesionId: null,
   };
 }
