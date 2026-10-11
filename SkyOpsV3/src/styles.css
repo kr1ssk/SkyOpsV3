@@ -1,0 +1,125 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #172438;
+  background-color: #f4f6fa;
+}
+
+body {
+  margin: 0;
+  background-color: #f4f6fa;
+  color: #172438;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero {
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  background-color: #12345b;
+  color: white;
+}
+
+.hero h1 {
+  max-width: 750px;
+  font-size: 2.6rem;
+}
+
+.hero p {
+  max-width: 700px;
+}
+
+.card {
+  border-color: #dce3ec;
+}
+
+.tarjeta-producto {
+  overflow: hidden;
+}
+
+.imagen-producto {
+  height: 190px;
+  padding: 1rem;
+  object-fit: contain;
+  background-color: #eaf0f7;
+}
+
+.imagen-detalle {
+  width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  padding: 2rem;
+  background-color: #eaf0f7;
+  border-radius: 1rem;
+}
+
+.precio {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #12345b;
+}
+
+.numero {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.cantidad {
+  min-width: 80px;
+  max-width: 100px;
+}
+
+.filtro {
+  max-width: 320px;
+}
+
+.formulario-contacto {
+  max-width: 650px;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.footer {
+  padding: 1.5rem 0;
+  background-color: #172438;
+  color: white;
+  margin-top: 2rem;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  scroll-margin-top: 1rem;
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 1.7rem;
+  }
+
+  .hero {
+    padding: 2rem 1.2rem;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .imagen-producto {
+    height: 170px;
+  }
+}
