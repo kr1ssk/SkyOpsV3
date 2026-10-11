@@ -60,11 +60,11 @@ Jasmine restaura los spies y cleanup desmonta los componentes entre casos.
 
 La sintaxis de los archivos JavaScript y JSX fue comprobada con el parser
 Babel. Los 12 casos de negocio se verificaron mediante assert de Node.js.
-Esta comprobación no reemplaza la ejecución de Jasmine y Karma.
+Esta comprobación fue complementada por la ejecución real de Jasmine y Karma
+en GitHub Actions, detallada a continuación.
 
 La instalación local de npm falló con EBADF al escribir en el entorno de
-trabajo. No se generaron porcentajes de cobertura ni se confirmó el build
-localmente. La verificación completa queda a cargo de la ejecución automática.
+trabajo. La verificación completa se realizó después en GitHub Actions.
 
 ## Ejecución y resultados
 
@@ -74,8 +74,15 @@ La suite contiene 26 casos: 12 de lógica y 14 de componentes.
 La ejecución completa y sus resultados se registran en GitHub Actions:
 https://github.com/kr1ssk/SkyOpsV3/actions
 
-Estado de ejecución y porcentajes: pendientes de confirmar.
-No se considera que las pruebas pasan solamente por estar escritas.
+**Resultado real del 11 de octubre de 2026:** 26 pruebas aprobadas y 0 fallidas.
+
+- Pruebas: Jasmine y Karma con Chrome Headless 154.
+- Entorno: Ubuntu 24.04, Node.js 24.21.0 y npm 11.19.0.
+- Código verificado: commit a6e8229d4b0dbf417285a76e65898b60ec411fe8.
+- [Ejecución y registros](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166501028).
+
+La primera ejecución detectó imports sin extensión incompatibles con
+webpack en módulos ES. Se corrigieron y la siguiente ejecución pasó.
 
 ## Cobertura
 
@@ -88,10 +95,15 @@ main.jsx se excluye por ser el punto de montaje.
 
 | Métrica | Resultado |
 | --- | --- |
-| Sentencias | Pendiente de ejecución |
-| Ramas | Pendiente de ejecución |
-| Funciones | Pendiente de ejecución |
-| Líneas | Pendiente de ejecución |
+| Sentencias | 60,55 % (218/360) |
+| Ramas | 52,58 % (112/213) |
+| Funciones | 59,20 % (74/125) |
+| Líneas | 60,22 % (212/352) |
+
+La cobertura muestra que siguen existiendo caminos sin comprobar,
+especialmente en las páginas y operaciones que no forman parte de estos
+casos. No se afirma cobertura total ni se usa el porcentaje como prueba
+de ausencia de errores.
 
 ## Verificación manual
 
@@ -110,4 +122,5 @@ Estas comprobaciones visuales y sus capturas quedan pendientes de ejecución.
 
 Comando: npm run build.
 
+**Resultado:** compilación correcta con Vite en la ejecución enlazada.
 El flujo automático ejecuta la compilación después de las pruebas.
