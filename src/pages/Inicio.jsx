@@ -4,14 +4,14 @@ import { Link } from "react-router-dom";
 import { useSkyOps } from "../context/SkyOpsContext.jsx";
 
 export default function Inicio() {
-  const { datos } = useSkyOps();
+  const { datos, usuario } = useSkyOps();
 
   const ofertas = datos.productos.filter(
     (producto) => producto.descuento > 0
   ).length;
 
   const pendientes = datos.pedidos.filter(
-    (pedido) => pedido.estado === "Pendiente"
+    (pedido) => pedido.estado === "Pendiente" && (usuario?.rol === "admin" || pedido.entrega.usuarioId === usuario?.id)
   ).length;
 
   return (
@@ -44,7 +44,7 @@ export default function Inicio() {
           <Card body className="h-100">
             <h2 className="h5">Productos en oferta</h2>
             <p className="numero">{ofertas}</p>
-            <Link to="/catalogo?ofertas=si">Ver ofertas</Link>
+            <Link to="/ofertas">Ver ofertas</Link>
           </Card>
         </Col>
 
@@ -52,7 +52,7 @@ export default function Inicio() {
           <Card body className="h-100">
             <h2 className="h5">Pedidos pendientes</h2>
             <p className="numero">{pendientes}</p>
-            <Link to="/bitacora">Ver bitácora</Link>
+            <Link to={usuario?.rol === "admin" ? "/admin/ordenes" : usuario ? "/perfil" : "/login"}>{usuario ? "Ver pedidos" : "Iniciar sesión"}</Link>
           </Card>
         </Col>
       </Row>

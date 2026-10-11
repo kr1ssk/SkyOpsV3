@@ -10,7 +10,7 @@ export default function Resultado() {
 
   const pedido = datos.pedidos.find((p) => p.id === id);
 
-  if (!pedido) {
+  if (!pedido || (pedido.entrega.usuarioId && usuario?.rol !== "admin" && pedido.entrega.usuarioId !== usuario?.id)) {
     return (
       <>
         <h1>Pedido no encontrado</h1>
@@ -49,7 +49,7 @@ export default function Resultado() {
       <ResumenManifiesto lineas={pedido.lineas} total={pedido.total} />
 
       <div className="d-flex gap-2 flex-wrap">
-        <Button as={Link} to="/bitacora">Ver bitácora</Button>
+        <Button as={Link} to={usuario?.rol === "admin" ? "/admin/ordenes" : usuario ? "/perfil" : "/catalogo"}>{usuario ? "Ver historial" : "Volver al catálogo"}</Button>
 
         {rechazada && (
           <Button as={Link} to="/checkout" variant="outline-primary">
