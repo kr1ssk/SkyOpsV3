@@ -13,16 +13,16 @@ import { calcularTotal, obtenerLineas } from "../utils/negocio.js";
 import { validarCheckout } from "../utils/validaciones.js";
 
 export default function Checkout() {
-  const { datos, confirmarCompra } = useSkyOps();
+  const { datos, usuario, confirmarCompra } = useSkyOps();
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
   const [entrega, setEntrega] = useState({
     matricula: params.get("matricula") || "",
-    ingeniero: "",
-    licencia: "",
-    correo: "",
-    direccion: "",
+    ingeniero: usuario?.nombre || "",
+    licencia: usuario?.licencia || "",
+    correo: usuario?.correo || "",
+    direccion: usuario?.direccion || "",
     destino: "",
     tipoEntrega: "",
     declaracion: false,

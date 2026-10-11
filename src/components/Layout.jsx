@@ -3,13 +3,14 @@ import {
   Container,
   Nav,
   Navbar,
+  NavDropdown,
 } from "react-bootstrap";
 import { Link, NavLink, Outlet } from "react-router-dom";
 
 import { useSkyOps } from "../context/SkyOpsContext.jsx";
 
 export default function Layout() {
-  const { datos, errorAlmacenamiento } = useSkyOps();
+  const { datos, usuario, errorAlmacenamiento } = useSkyOps();
 
   const cantidad = datos.carrito.reduce(
     (total, item) => total + item.cantidad,
@@ -53,14 +54,13 @@ export default function Layout() {
                 Manifiesto ({cantidad})
               </Nav.Link>
 
-              <Nav.Link as={NavLink} to="/bitacora" eventKey="bitacora">
-                Bitácora
-              </Nav.Link>
-
-              <Nav.Link as={NavLink} to="/admin" eventKey="admin">
-                Administración
-              </Nav.Link>
-
+              <Nav.Link as={NavLink} to="/ofertas" eventKey="ofertas">Ofertas</Nav.Link>
+              <NavDropdown title="Información" id="menu-informacion">
+                <NavDropdown.Item as={Link} to="/nosotros">Nosotros</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/blog">Blog</NavDropdown.Item>
+              </NavDropdown>
+              {usuario?.rol === "admin" && <Nav.Link as={NavLink} to="/admin" eventKey="admin">Administración</Nav.Link>}
+              <Nav.Link as={NavLink} to={usuario ? "/perfil" : "/login"} eventKey="cuenta">{usuario ? "Mi perfil" : "Iniciar sesión"}</Nav.Link>
               <Nav.Link as={NavLink} to="/contacto" eventKey="contacto">
                 Contacto
               </Nav.Link>
