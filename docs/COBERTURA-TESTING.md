@@ -1,134 +1,135 @@
-# Informe de pruebas y cobertura — SkyOps
+# Documento de testing y cobertura - SkyOpsV3
+## 1. Objetivo y alcance
+Comprobar las funcionalidades principales del frontend de la Evaluación Parcial 2 con Jasmine y Karma.
+La suite final contiene **10 pruebas de componentes**, conforme a la referencia 10/10 de la rúbrica.
+El 12% de la pauta es la ponderación del indicador IE2.2.1, no una cantidad de pruebas.
 
-## Objetivo
+Se verifican renderizado, props, cambios de estado, eventos, formularios, DOM y persistencia.
+Las pruebas utilizan App, componentes y SkyOpsProvider reales. No se sustituyen las operaciones de negocio por spies.
+Los mocks se limitan a localStorage y window.confirm para controlar el entorno.
 
-Comprobar las reglas de compra y las interacciones principales de la
-aplicación, incluyendo validaciones, filtros, formularios y persistencia.
+## 2. Configuración
+- JavaScript/JSX, React, React Bootstrap y React Router.
+- Jasmine: describe, it y expect para definir casos y resultados.
+- Karma: ejecuta las pruebas en ChromeHeadless.
+- Webpack y Babel: procesan JSX para las pruebas.
+- Istanbul: mide sentencias, ramas, funciones y líneas.
+- React Testing Library: renderiza componentes y simula eventos de usuario.
+- MemoryRouter: permite probar rutas sin modificar la dirección del navegador.
+- afterEach(cleanup): desmonta componentes entre casos.
+- Cada prueba comienza con datos iniciales independientes.
 
-## Herramientas
+Archivos: karma.conf.cjs, test/index.js y test/componentes.spec.jsx.
+Las imágenes se sirven desde public/assets/img durante las pruebas.
 
-Jasmine define las pruebas; Karma las ejecuta en Google Chrome.
-Testing Library renderiza los componentes y permite interactuar con ellos.
-Istanbul y karma-coverage generan el informe de cobertura.
+## 3. Ejecutar y reproducir
+En la carpeta del proyecto, con Node.js 24 y Chrome instalados:
 
-## Pruebas de lógica
+```powershell
+npm ci
+npm test
+npm run build
+```
 
-| ID | Caso |
-| --- | --- |
-| B01 | Aplicación del descuento |
-| B02 | Agregar un producto |
-| B03 | Incrementar una cantidad |
-| B04 | Impedir superar el stock |
-| B05 | Rechazar cantidades decimales |
-| B06 | Quitar un producto |
-| B07 | Calcular el total con descuentos |
-| B08 | Aprobar: descontar stock y vaciar carrito |
-| B09 | Rechazar: conservar stock y carrito |
-| B10 | Validar checkout |
-| B11 | Validar stock y precio |
-| B12 | Validar contacto |
+Si Chrome está instalado en una ubicación diferente, indicar su ruta:
 
-## Pruebas de componentes
+```powershell
+$env:CHROME_BIN = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+npm test
+```
 
-| ID | Caso |
-| --- | --- |
-| C01 | Mostrar y comunicar el error de Campo |
-| C02 | Agregar desde la tarjeta |
-| C03 | Deshabilitar productos sin stock |
-| C04 | Mostrar resumen y total |
-| C05 | Buscar en el catálogo |
-| C06 | Quitar desde el manifiesto |
-| C07 | Impedir checkout con datos vacíos |
-| C08 | Crear un producto desde administración |
-| C09 | Registrar una consulta válida |
-| C10 | Mostrar página para ruta inexistente |
-| C11 | Guardar el carrito con el proveedor |
-| C12 | Filtrar ofertas |
-| C13 | Editar un producto |
-| C14 | Confirmar eliminación de un producto |
+Abrir coverage/index.html para revisar cobertura por carpeta, archivo y línea.
+El resultado también está en coverage/coverage-summary.json.
+La compilación y cobertura se conservan como artefactos de GitHub Actions.
 
-## Mocks
+## 4. Casos y resultados
+| Caso | Qué comprueba | Resultado esperado | ERS |
+| --- | --- | --- | --- |
+| C01 | Renderizado de tarjetas con datos, búsqueda, categoría, ofertas, detalle y agregar | Solo se muestran productos que cumplen filtros; agregar cambia el manifiesto | RF02, RF03, RF05, RF06 |
+| C02 | Cambiar cantidades, calcular total, superar stock y quitar | Total de dos actuadores: $1.530.000; cantidad 99 rechazada; quitar vacía el carrito | RF06 |
+| C03 | Registro vacío/válido, login incorrecto/correcto, perfil y cierre de sesión | Errores visibles, cuenta cliente guardada, perfil actualizado y sesión eliminada | RF12, RF13, RF14 |
+| C04 | Acceso administrativo de visitante y cliente | Visitante pasa a login; cliente pasa a perfil | RF27 |
+| C05 | Checkout vacío, datos precargados y aprobación | No compra datos inválidos; aprobación descuenta stock, vacía manifiesto y vincula usuario | RF07, RF08, RF09, RF11 |
+| C06 | Compra rechazada y reintento | Conserva stock y manifiesto y vuelve al checkout | RF10, RF11 |
+| C07 | Crear, consultar, editar y eliminar producto desde el formulario | Producto guardado, precio actualizado, detalle visible y eliminación confirmada | RF15 |
+| C08 | Crear, renombrar y eliminar categoría, y proteger categorías utilizadas | Renombrar actualiza productos; eliminar categoría utilizada muestra error | RF16 |
+| C09 | Crear, mostrar, editar y eliminar usuario | Datos actualizados, detalle e historial vacío visibles; cuenta activa protegida | RF17 |
+| C10 | Resolver pedido, desmontar/montar y calcular reporte y stock crítico | Estado persiste; rechazados no suman ventas/unidades; stock crítico visible | RF18, RF20, RF21, RF26 |
 
-Un Context simulado aísla las páginas de la persistencia real.
-jasmine.createSpy comprueba las llamadas a las funciones.
+Los diez casos aprobaron. Cada caso agrupa comprobaciones del mismo flujo; no son diez capturas ni diez pruebas de que una página simplemente abre.
 
-La prueba del proveedor simula getItem y setItem con spyOn.
-La prueba de eliminación simula window.confirm.
-Jasmine restaura los spies y cleanup desmonta los componentes entre casos.
+## 5. Mocks y análisis
+localStorage.getItem y setItem se simulan para conservar datos durante cada caso sin contaminar el navegador de otras pruebas.
+Se comprueba el contenido guardado, por ejemplo carrito, stock, usuario y estado del pedido.
+window.confirm se simula con una respuesta afirmativa en los casos de eliminación.
+La implementación de Context, CRUD, compra y reportes se ejecuta realmente.
 
-## Verificación local del 11 de octubre de 2026
+Se incluyen casos positivos y negativos: formulario vacío, credenciales incorrectas, cantidad mayor al stock, acceso con rol cliente, categoría utilizada y eliminación de la propia cuenta.
+Los resultados se verifican tanto en el DOM como en el estado persistido; un mensaje de éxito por sí solo no demuestra que cambien los datos.
 
-La sintaxis de los archivos JavaScript y JSX fue comprobada con el parser
-Babel. Los 12 casos de negocio se verificaron mediante assert de Node.js.
-Esta comprobación fue complementada por la ejecución real de Jasmine y Karma
-en GitHub Actions, detallada a continuación.
+## 6. Evidencia de ejecución
+Fecha: 11 de octubre de 2026.
+Código verificado: a1cc812377bee0f7b342825efded60f0bf2ebaf3.
+Entorno de GitHub Actions: Ubuntu 24.04, Node.js 24.21.0 y ChromeHeadless 154.
 
-La instalación local de npm falló con EBADF al escribir en el entorno de
-trabajo. La verificación completa se realizó después en GitHub Actions.
+- **TOTAL: 10 SUCCESS**.
+- **npm run build: correcto**.
+- [Ejecución verificable y artefactos](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38170208905).
 
-## Ejecución y resultados
+| Métrica | Cubierto / total | Porcentaje |
+| --- | --- | --- |
+| Sentencias | 468 / 603 | 77,61% |
+| Ramas | 319 / 423 | 75,41% |
+| Funciones | 176 / 225 | 78,22% |
+| Líneas | 409 / 519 | 78,80% |
 
-Comando: npm test.
+main.jsx se excluye de la instrumentación porque contiene el arranque de la aplicación; se comprueba al abrir la compilación.
+Las demás vistas importadas por App se incluyen aunque una prueba no las abra. No se excluyen archivos para aumentar artificialmente el porcentaje.
+La rúbrica no establece un porcentaje mínimo numérico de cobertura.
 
-La suite contiene 26 casos: 12 de lógica y 14 de componentes.
-La ejecución completa y sus resultados se registran en GitHub Actions:
-https://github.com/kr1ssk/SkyOpsV3/actions
+## 7. Qué significan estos porcentajes
+- Sentencias: instrucciones que se ejecutaron.
+- Ramas: alternativas de condiciones que se recorrieron.
+- Funciones: funciones que fueron llamadas.
+- Líneas: líneas ejecutables que se ejecutaron.
 
-**Resultado real del 11 de octubre de 2026:** 26 pruebas aprobadas y 0 fallidas.
+Estos valores no son una calificación ni una medida de ausencia de errores.
+Que las diez pruebas pasen indica que sus resultados esperados se cumplieron.
+No significa que todas las funciones o situaciones estén probadas.
 
-- Pruebas: Jasmine y Karma con Chrome Headless 154.
-- Entorno: Ubuntu 24.04, Node.js 24.21.0 y npm 11.19.0.
-- Código verificado: commit 5c38de93d613f479d982465eef900f435736775a.
-- [Ejecución y registros](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166824417).
+## 8. Límites identificados
+La suite de diez casos prioriza los flujos principales, sin afirmar cobertura exhaustiva.
+No automatiza todos los errores posibles de CRUD, cambios de rol, almacenamiento corrupto o sin espacio, ni toda la validación de contacto.
+Las páginas informativas y parte de la flota no se ejecutan en estos diez casos y aparecen con baja o nula cobertura.
+Estas limitaciones son visibles en el informe y pueden afectar el nivel del indicador de cobertura de la rúbrica.
 
-La primera ejecución detectó imports sin extensión incompatibles con
-webpack en módulos ES. Se corrigieron y la siguiente ejecución pasó.
+Ejemplos de líneas cubiertas: Checkout 96,87%; Manifiesto 100%; Login/Registro 100%; Context 85,96%; repositorio 87,69%.
+Inicio, Nosotros, Blog, DetalleBlog, Contacto, Categorias y Dashboard no se ejercitan en la suite final. La revisión manual no modifica la cobertura de Jasmine/Karma.
+No se declara que 78,80% sea una cobertura completa.
 
-## Cobertura
+## 9. Revisión manual de la compilación
+Se abrió la compilación generada por GitHub Actions en un servidor local y se revisó en el navegador.
 
-El informe local se encuentra en coverage/index.html después de npm test.
-En GitHub Actions se publica como artefacto llamado cobertura-skyops.
+| Vista o acción | Tamaño | Resultado observado |
+| --- | --- | --- |
+| Catálogo e imágenes | 393 x 852 | Tarjetas en una columna, menú colapsable, tres imágenes cargadas y sin desbordamiento horizontal de la página |
+| Manifiesto y checkout | 768 x 1024 | Tabla y formulario legibles; formulario/resumen apilados; sin desbordamiento horizontal |
+| Administración de productos | 1366 x 900 | Formulario y listado en columnas; acciones visibles; sin desbordamiento horizontal |
+| Administración de productos | 393 x 852 | Formulario y listado apilados; navegación de módulos adaptable |
+| Login administrativo | Navegador local | Credenciales demo abren perfil y muestran acceso a administración |
+| Blog y ambas publicaciones | Móvil | Dos publicaciones y sus respectivos detalles accesibles |
+| Contacto | Móvil | Vacío muestra errores; consulta ficticia válida muestra confirmación de guardado local |
 
-La cobertura incluye los módulos importados por las pruebas.
-App importa las páginas para que también se instrumenten.
-main.jsx se excluye por ser el punto de montaje.
+Estas comprobaciones son manuales y no se cuentan como pruebas unitarias.
+No reemplazan la revisión en dispositivos físicos ni validan seguridad de producción.
 
-| Métrica | Resultado |
-| --- | --- |
-| Sentencias | 60,55 % (218/360) |
-| Ramas | 52,58 % (112/213) |
-| Funciones | 59,20 % (74/125) |
-| Líneas | 60,22 % (212/352) |
+## 10. Demostración para la presentación
+1. Explicar estructura de React, un componente con props y un formulario con estado.
+2. Mostrar catálogo, filtros, manifiesto y checkout aprobado/rechazado.
+3. Ingresar con admin@skyops.cl / Skyops123 y mostrar CRUD, órdenes, stock crítico y reporte.
+4. Ejecutar npm test y explicar C01-C10, mocks y resultados.
+5. Abrir coverage/index.html y explicar un archivo con líneas no cubiertas.
+6. Mostrar Bootstrap en móvil/escritorio, la ERS y los commits.
 
-La cobertura muestra que siguen existiendo caminos sin comprobar,
-especialmente en las páginas y operaciones que no forman parte de estos
-casos. No se afirma cobertura total ni se usa el porcentaje como prueba
-de ausencia de errores.
-
-## Verificación manual
-
-- Revisar catálogo, categorías y ofertas.
-- Agregar hasta alcanzar el stock y comprobar el bloqueo.
-- Cambiar cantidades y quitar productos.
-- Aprobar una compra, comprobar stock e historial.
-- Rechazar una compra y comprobar que se conserva el carrito.
-- Recargar y comprobar la persistencia.
-- Crear, editar y eliminar productos.
-- Revisar navegación, mensajes y formularios en móvil.
-
-Estas comprobaciones visuales y sus capturas quedan pendientes de ejecución.
-
-## Compilación
-
-Comando: npm run build.
-
-**Resultado:** compilación correcta con Vite en la ejecución enlazada.
-El flujo automático ejecuta la compilación después de las pruebas.
-
-## Verificación de instalación reproducible
-
-La ejecución final utilizó npm ci con el package-lock.json publicado.
-Instalación, 26 pruebas y compilación finalizaron correctamente.
-La cobertura se mantuvo en los valores de la tabla anterior.
-
-[Ejecución final](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166824417).
+Presentación: 15 minutos más 5 de preguntas. Cada integrante debe entender el código y sus cambios.
+No se simula validación docente ni se declara una nota garantizada.

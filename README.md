@@ -79,3 +79,9 @@ Los cambios exclusivamente en Markdown no repiten las pruebas.
 
 La fuente de datos es simulada, según el cuerpo del anexo. La frase final sobre integración con backend requiere confirmación docente y no se declara implementada.
 Las imágenes originales provienen de [SkyOpsV2](https://github.com/kr1ssk/SkyOpsV2/tree/04efbe37a9f3fcf1a834c32cb853c5b34beeee9b/assets/img).
+
+## Resultado verificado
+
+Diez pruebas aprobadas, compilación correcta y cobertura de líneas de 78,80%.
+[Evidencia final](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38170208905).
+La cobertura y sus limitaciones se detallan en el informe de testing.
