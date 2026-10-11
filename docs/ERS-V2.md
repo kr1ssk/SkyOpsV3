@@ -83,3 +83,20 @@ El informe de pruebas registra los resultados verificables.
 Las capturas de uso y de vista móvil deben obtenerse de la aplicación
 en ejecución para la presentación. La versión ZIP debe incluir el
 frontend sin node_modules.
+
+## Verificación de los requisitos
+
+El 11 de octubre de 2026 se ejecutaron 26 pruebas con Jasmine y Karma:
+12 de reglas de negocio y 14 de componentes. Todas aprobaron y la
+compilación de producción terminó correctamente.
+
+[Evidencia de ejecución](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166501028).
+
+Las pruebas de componentes cubren búsqueda y ofertas (RF02–RF03),
+carrito (RF05), validación del checkout (RF07), creación, edición y
+eliminación (RF14), contacto (RF17) y persistencia (RF18).
+Las pruebas de negocio comprueban descuentos, total, cantidades, stock,
+resultados aprobados y rechazados y validaciones (RF04–RF11 y RF15).
+
+Esta evidencia no reemplaza la comprobación visual responsiva ni implica
+que todas las ramas de cada requisito hayan sido probadas.
