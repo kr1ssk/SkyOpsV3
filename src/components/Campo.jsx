@@ -19,6 +19,7 @@ export default function Campo({
         value={value}
         onChange={onChange}
         isInvalid={Boolean(error)}
+        aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
       />
 

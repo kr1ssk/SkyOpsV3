@@ -14,7 +14,7 @@ import {
 } from "../utils/negocio";
 import { validarProducto, validarCheckout } from "../utils/validaciones";
 
-const SkyOpsContext = createContext(null);
+export const SkyOpsContext = createContext(null);
 const CLAVE = "skyops_v3";
 
 function leerDatos() {
