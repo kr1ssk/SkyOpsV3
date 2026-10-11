@@ -2,7 +2,11 @@ name: Verificar SkyOps
 
 on:
   push:
+    paths-ignore:
+      - '**/*.md'
   pull_request:
+    paths-ignore:
+      - '**/*.md'
 
 jobs:
   verificar:
@@ -16,12 +20,8 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Instalar dependencias
-        run: npm install --no-audit --no-fund
-
-      - name: Registrar archivo de versiones
-        run: |
-          node -e "const fs = require('node:fs'); const zlib = require('node:zlib'); console.log('SKYOPS_LOCK=' + zlib.gzipSync(fs.readFileSync('package-lock.json')).toString('base64'));"
+      - name: Instalar versiones de package-lock
+        run: npm ci --no-audit --no-fund
 
       - name: Ejecutar pruebas y cobertura
         run: npm test
