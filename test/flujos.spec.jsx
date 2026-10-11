@@ -88,7 +88,7 @@ describe("Flujos y vistas del anexo", () => {
     escribir("Resultado del pago simulado", "rechazada");
     fireEvent.click(screen.getByRole("button", { name: "Confirmar compra" }));
     expect(screen.getByRole("heading", { name: "Compra rechazada" })).toBeTruthy();
-    expect(screen.getByRole("link", { name: "Reintentar compra" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Reintentar compra" })).toBeTruthy();
     expect(ultimosDatos().productos[0].stock).toBe(4);
   });
   it("F09 dashboard y reportes reflejan compras", () => {
@@ -140,8 +140,8 @@ describe("Flujos y vistas del anexo", () => {
     expect(screen.getByRole("heading", { name: "Nosotros" })).toBeTruthy();
     cleanup();
     mostrar("/blog");
-    expect(screen.getAllByRole("link", { name: "Leer publicación" }).length).toBe(2);
-    fireEvent.click(screen.getAllByRole("link", { name: "Leer publicación" })[0]);
+    expect(screen.getAllByRole("button", { name: "Leer publicación" }).length).toBe(2);
+    fireEvent.click(screen.getAllByRole("button", { name: "Leer publicación" })[0]);
     expect(screen.getByRole("heading", { name: "Cómo buscar un repuesto por categoría ATA" })).toBeTruthy();
   });
   it("F15 ofertas excluye productos sin descuento", () => {
@@ -160,7 +160,7 @@ describe("Flujos y vistas del anexo", () => {
   });
   it("F17 muestra categoría y detalle de producto", () => {
     mostrar("/categorias");
-    fireEvent.click(screen.getAllByRole("link", { name: "Ver repuestos" })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "Ver repuestos" })[0]);
     expect(screen.getByRole("heading", { name: "Actuador de Superficie de Control" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Álabe de Turbina" })).toBeNull();
   });
@@ -169,7 +169,7 @@ describe("Flujos y vistas del anexo", () => {
     mostrar("/admin/ordenes", true);
     fireEvent.click(screen.getByRole("button", { name: "Marcar resuelto" }));
     expect(ultimosDatos().pedidos[0].estado).toBe("Resuelto");
-    fireEvent.click(screen.getByRole("link", { name: "Ver resumen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Ver resumen" }));
     expect(screen.getByRole("heading", { name: "Compra confirmada" })).toBeTruthy();
   });
 });

@@ -25,7 +25,8 @@ module.exports = function (config) {
   config.set({
     frameworks: ["jasmine"],
 
-    files: ["test/index.js"],
+    files: ["test/index.js", { pattern: "public/assets/img/*.svg", included: false, served: true, watched: false }],
+    proxies: { "/assets/img/": "/base/public/assets/img/" },
 
     preprocessors: {
       "test/index.js": ["webpack"],
