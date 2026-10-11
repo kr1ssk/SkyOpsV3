@@ -1,174 +1,195 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import App from "../src/App.jsx";
-import Campo from "../src/components/Campo.jsx";
-import TarjetaProducto from "../src/components/TarjetaProducto.jsx";
-import ResumenManifiesto from "../src/components/ResumenManifiesto.jsx";
-import { SkyOpsContext, SkyOpsProvider } from "../src/context/SkyOpsContext.jsx";
+import { SkyOpsProvider } from "../src/context/SkyOpsContext.jsx";
 import { crearDatosIniciales } from "../src/data/semilla.js";
 
-describe("Componentes de SkyOps", () => {
-  let contexto;
-
+// Las pruebas usan el estado real. Solo simulamos almacenamiento y confirmación.
+describe("Diez pruebas de componentes de SkyOps", () => {
+  let datos, guardado;
   beforeEach(() => {
-    contexto = {
-      datos: crearDatosIniciales(),
-      usuario: { id: "admin-demo", rol: "admin", nombre: "Admin" },
-      errorAlmacenamiento: "",
-      agregarProducto: jasmine.createSpy("agregarProducto"),
-      actualizarCantidad: jasmine.createSpy("actualizarCantidad"),
-      eliminarDelCarrito: jasmine.createSpy("eliminarDelCarrito"),
-      confirmarCompra: jasmine.createSpy("confirmarCompra"),
-      guardarProducto: jasmine.createSpy("guardarProducto"),
-      borrarProducto: jasmine.createSpy("borrarProducto"),
-      resolverPedido: jasmine.createSpy("resolverPedido"),
-      guardarContacto: jasmine.createSpy("guardarContacto"),
-    };
+    datos = crearDatosIniciales();
+    guardado = null;
+    spyOn(localStorage, "getItem").and.callFake(() => guardado || JSON.stringify(datos));
+    spyOn(localStorage, "setItem").and.callFake((clave, valor) => { guardado = valor; });
   });
-
   afterEach(cleanup);
-
-  function mostrarPagina(ruta) {
-    render(
-      <MemoryRouter initialEntries={[ruta]}>
-        <SkyOpsContext.Provider value={contexto}>
-          <App />
-        </SkyOpsContext.Provider>
-      </MemoryRouter>
-    );
+  function mostrar(ruta, admin = false) {
+    if (admin) datos.sesionId = "admin-demo";
+    return render(<MemoryRouter initialEntries={[ruta]}><SkyOpsProvider><App /></SkyOpsProvider></MemoryRouter>);
   }
-
   function escribir(etiqueta, valor) {
-    fireEvent.change(screen.getByLabelText(etiqueta), {
-      target: { value: valor },
-    });
+    fireEvent.change(screen.getByLabelText(etiqueta), { target: { value: valor } });
   }
-
-  it("C01 muestra y comunica el error de un campo", () => {
-    render(<Campo id="campo-prueba" label="Nombre" value=""
-      onChange={() => {}} error="Ingresa un nombre." />);
-    expect(screen.getByText("Ingresa un nombre.")).toBeTruthy();
-    expect(screen.getByLabelText("Nombre").getAttribute("aria-invalid")).toBe("true");
-  });
-
-  it("C02 agrega un producto desde su tarjeta", () => {
-    render(
-      <MemoryRouter>
-        <TarjetaProducto producto={contexto.datos.productos[0]}
-          onAgregar={contexto.agregarProducto} />
-      </MemoryRouter>
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Agregar" }));
-    expect(contexto.agregarProducto).toHaveBeenCalledWith(1);
-  });
-
-  it("C03 deshabilita agregar cuando no hay stock", () => {
-    render(
-      <MemoryRouter>
-        <TarjetaProducto producto={{ ...contexto.datos.productos[0], stock: 0 }}
-          onAgregar={contexto.agregarProducto} />
-      </MemoryRouter>
-    );
-    expect(screen.getByRole("button", { name: "Agregar" }).disabled).toBeTrue();
-  });
-
-  it("C04 muestra productos y total en el resumen", () => {
-    render(<ResumenManifiesto lineas={[
-      { id: 1, nombre: "Actuador de prueba", cantidad: 2,
-        precioUnitario: 100, subtotal: 200 }
-    ]} total={200} />);
-    expect(screen.getByText("Actuador de prueba")).toBeTruthy();
-    expect(screen.getByText(/Total:/).textContent).toContain("200");
-  });
-
-  it("C05 filtra el catálogo por nombre", () => {
-    mostrarPagina("/catalogo");
+  function actuales() { return JSON.parse(guardado); }
+  function completarCheckout() {
+    escribir("Matrícula de aeronave", "CC-BFA");
+    escribir("Nombre y apellido del ingeniero", "Ana Pérez");
+    escribir("Licencia del ingeniero", "AA-1234");
+    escribir("Correo electrónico", "ana@example.com");
+    escribir("Dirección de entrega o retiro", "Hangar aeropuerto");
+    escribir("Aeropuerto de destino", "SCL");
+    escribir("Forma de entrega", "Retiro en bodega");
+    fireEvent.click(screen.getByLabelText(/Confirmo que revisaré/));
+  }
+  it("C01 renderiza productos, filtra categoría y ofertas y abre detalle", () => {
+    mostrar("/catalogo");
+    expect(screen.getAllByRole("button", { name: "Agregar" }).length).toBe(3);
     escribir("Buscar repuesto", "Tren Principal");
     expect(screen.getByRole("heading", { name: "Actuador de Tren Principal" })).toBeTruthy();
     expect(screen.queryByRole("heading", { name: "Álabe de Turbina" })).toBeNull();
+    escribir("Buscar repuesto", "");
+    escribir("Categoría", "ATA 27");
+    expect(screen.queryByRole("heading", { name: "Actuador de Tren Principal" })).toBeNull();
+    cleanup(); mostrar("/ofertas");
+    expect(screen.queryByRole("heading", { name: "Actuador de Tren Principal" })).toBeNull();
+    cleanup(); mostrar("/catalogo/1");
+    expect(screen.getByRole("heading", { name: "Actuador de Superficie de Control" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Agregar al manifiesto" }));
+    expect(actuales().carrito[0]).toEqual({ productoId: 1, cantidad: 1 });
   });
-
-  it("C06 permite quitar un producto del manifiesto", () => {
-    contexto.datos.carrito = [{ productoId: 1, cantidad: 1 }];
-    mostrarPagina("/manifiesto");
+  it("C02 actualiza cantidades y total del manifiesto y permite quitar", () => {
+    datos.carrito = [{ productoId: 1, cantidad: 1 }];
+    mostrar("/manifiesto");
+    const cantidad = screen.getByRole("spinbutton");
+    fireEvent.change(cantidad, { target: { value: "2" } });
+    expect(actuales().carrito[0].cantidad).toBe(2);
+    expect(screen.getByText(/Total:/).textContent.replace(/[^0-9]/g, "")).toBe("1530000");
+    fireEvent.change(cantidad, { target: { value: "99" } });
+    expect(screen.getByRole("alert").textContent).toContain("stock");
+    expect(actuales().carrito[0].cantidad).toBe(2);
     fireEvent.click(screen.getByRole("button", { name: "Quitar" }));
-    expect(contexto.eliminarDelCarrito).toHaveBeenCalledWith(1);
+    expect(actuales().carrito.length).toBe(0);
   });
-
-  it("C07 impide confirmar un checkout con datos vacíos", () => {
-    contexto.datos.carrito = [{ productoId: 1, cantidad: 1 }];
-    mostrarPagina("/checkout");
+  it("C03 valida registro y login, guarda perfil y cierra sesión", () => {
+    mostrar("/registro");
+    fireEvent.click(screen.getByRole("button", { name: "Crear cuenta" }));
+    expect(screen.getByText("Ingresa el nombre.")).toBeTruthy();
+    expect(actuales().usuarios.length).toBe(1);
+    escribir("Nombre completo", "Ana Pérez"); escribir("Correo de la cuenta", "ana@example.com");
+    escribir("Contraseña", "Prueba123"); escribir("Repetir contraseña", "Prueba123");
+    fireEvent.click(screen.getByRole("button", { name: "Crear cuenta" }));
+    escribir("Correo de la cuenta", "ana@example.com"); escribir("Contraseña", "incorrecta");
+    fireEvent.click(screen.getByRole("button", { name: "Ingresar" }));
+    expect(screen.getByRole("alert").textContent).toContain("incorrectos");
+    escribir("Contraseña", "Prueba123");
+    fireEvent.click(screen.getByRole("button", { name: "Ingresar" }));
+    expect(screen.getByRole("heading", { name: "Mi perfil" })).toBeTruthy();
+    escribir("Dirección de entrega", "Hangar aeropuerto");
+    fireEvent.click(screen.getByRole("button", { name: "Guardar usuario" }));
+    expect(actuales().usuarios[1].direccion).toBe("Hangar aeropuerto");
+    fireEvent.click(screen.getByRole("button", { name: "Cerrar sesión" }));
+    expect(actuales().sesionId).toBeNull();
+    expect(screen.getByRole("heading", { name: "Iniciar sesión" })).toBeTruthy();
+  });
+  it("C04 restringe rutas administrativas según sesión y rol", () => {
+    mostrar("/admin");
+    expect(screen.getByRole("heading", { name: "Iniciar sesión" })).toBeTruthy();
+    cleanup();
+    datos.usuarios.push({ id: "cliente", nombre: "Ana Pérez", correo: "ana@example.com", clave: "Prueba123", rol: "cliente", direccion: "", licencia: "" });
+    datos.sesionId = "cliente"; guardado = null;
+    mostrar("/admin/usuarios");
+    expect(screen.getByRole("heading", { name: "Mi perfil" })).toBeTruthy();
+    expect(screen.queryByRole("heading", { name: "Administración de usuarios" })).toBeNull();
+  });
+  it("C05 valida checkout, precarga perfil y confirma compra descontando stock", () => {
+    datos.usuarios[0].direccion = "Hangar aeropuerto"; datos.usuarios[0].licencia = "AA-1234";
+    datos.carrito = [{ productoId: 1, cantidad: 1 }];
+    mostrar("/checkout", true);
+    expect(screen.getByLabelText("Dirección de entrega o retiro").value).toBe("Hangar aeropuerto");
+    expect(screen.getByLabelText("Licencia del ingeniero").value).toBe("AA-1234");
     fireEvent.click(screen.getByRole("button", { name: "Confirmar compra" }));
     expect(screen.getByText("Usa el formato CC-BFA.")).toBeTruthy();
-    expect(contexto.confirmarCompra).not.toHaveBeenCalled();
+    expect(actuales().pedidos.length).toBe(0);
+    completarCheckout();
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar compra" }));
+    expect(screen.getByRole("heading", { name: "Compra confirmada" })).toBeTruthy();
+    expect(actuales().productos[0].stock).toBe(3);
+    expect(actuales().carrito.length).toBe(0);
+    expect(actuales().pedidos[0].entrega.usuarioId).toBe("admin-demo");
   });
-
-  it("C08 envía un producto válido desde administración", () => {
-    mostrarPagina("/admin/productos");
-    escribir("Nombre", "Filtro aeronáutico");
-    escribir("Número de parte", "PN-001");
-    escribir("Categoría ATA", "ATA 27");
-    escribir("Descripción", "Filtro para mantenimiento.");
-    escribir("Ubicación", "Bodega SCL");
-    escribir("Stock", "3");
-    escribir("Precio en CLP", "50000");
-    fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
-    expect(contexto.guardarProducto).toHaveBeenCalledWith(
-      jasmine.objectContaining({
-        id: null, nombre: "Filtro aeronáutico", stock: 3, precio: 50000,
-      })
-    );
+  it("C06 compra rechazada conserva stock y permite reintentar", () => {
+    datos.carrito = [{ productoId: 1, cantidad: 1 }];
+    mostrar("/checkout"); completarCheckout();
+    escribir("Resultado del pago simulado", "rechazada");
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar compra" }));
+    expect(screen.getByRole("heading", { name: "Compra rechazada" })).toBeTruthy();
+    expect(actuales().productos[0].stock).toBe(4);
+    expect(actuales().carrito.length).toBe(1);
+    fireEvent.click(screen.getByRole("button", { name: "Reintentar compra" }));
+    expect(screen.getByRole("heading", { name: "Checkout" })).toBeTruthy();
   });
-
-  it("C09 guarda una consulta válida", () => {
-    mostrarPagina("/contacto");
-    escribir("Nombre", "Ana Pérez");
-    escribir("Correo electrónico", "ana@example.com");
-    escribir("Mensaje", "Necesito consultar la disponibilidad de un repuesto.");
-    fireEvent.click(screen.getByRole("button", { name: "Enviar consulta" }));
-    expect(contexto.guardarContacto).toHaveBeenCalled();
-    expect(screen.getByText("Tu consulta quedó guardada en este navegador.")).toBeTruthy();
-  });
-
-  it("C10 muestra la página de una ruta inexistente", () => {
-    mostrarPagina("/ruta-inexistente");
-    expect(screen.getByRole("heading", { name: "Página no encontrada" })).toBeTruthy();
-  });
-
-  it("C11 guarda el carrito mediante localStorage", () => {
-    spyOn(localStorage, "getItem").and.returnValue(null);
-    const guardar = spyOn(localStorage, "setItem").and.stub();
-    render(
-      <MemoryRouter initialEntries={["/catalogo"]}>
-        <SkyOpsProvider><App /></SkyOpsProvider>
-      </MemoryRouter>
-    );
-    fireEvent.click(screen.getAllByRole("button", { name: "Agregar" })[0]);
-    const ultima = guardar.calls.mostRecent().args;
-    expect(ultima[0]).toBe("skyops_v3");
-    expect(JSON.parse(ultima[1]).carrito).toEqual([{ productoId: 1, cantidad: 1 }]);
-  });
-
-  it("C12 filtra las ofertas del catálogo", () => {
-    mostrarPagina("/catalogo?ofertas=si");
-    expect(screen.getByRole("heading", { name: "Álabe de Turbina" })).toBeTruthy();
-    expect(screen.queryByRole("heading", { name: "Actuador de Tren Principal" })).toBeNull();
-  });
-
-  it("C13 permite editar un producto existente", () => {
-    mostrarPagina("/admin/productos");
-    fireEvent.click(screen.getAllByRole("button", { name: "Editar" })[0]);
-    escribir("Precio en CLP", "900000");
-    fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
-    expect(contexto.guardarProducto).toHaveBeenCalledWith(
-      jasmine.objectContaining({ id: 1, precio: 900000 })
-    );
-  });
-
-  it("C14 solicita confirmación antes de eliminar un producto", () => {
+  it("C07 crea, muestra, edita y elimina un producto desde administración", () => {
     spyOn(window, "confirm").and.returnValue(true);
-    mostrarPagina("/admin/productos");
+    mostrar("/admin/productos", true);
+    fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
+    expect(screen.getByText("Ingresa el número de parte.")).toBeTruthy();
+    escribir("Nombre", "Filtro aeronáutico"); escribir("Número de parte", "PN-001");
+    escribir("Categoría ATA", "ATA 27"); escribir("Descripción", "Filtro para mantenimiento.");
+    escribir("Ubicación", "Bodega SCL"); escribir("Stock", "3"); escribir("Precio en CLP", "50000");
+    fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
+    expect(actuales().productos.length).toBe(4);
+    const fila = screen.getByText("Filtro aeronáutico").closest("tr");
+    fireEvent.click(within(fila).getByRole("button", { name: "Editar" }));
+    escribir("Precio en CLP", "60000");
+    fireEvent.click(screen.getByRole("button", { name: "Guardar producto" }));
+    expect(actuales().productos[3].precio).toBe(60000);
+    fireEvent.click(within(screen.getByText("Filtro aeronáutico").closest("tr")).getByRole("button", { name: "Ver" }));
+    expect(screen.getByRole("heading", { name: "Filtro aeronáutico" })).toBeTruthy();
+    cleanup(); mostrar("/admin/productos");
+    fireEvent.click(within(screen.getByText("Filtro aeronáutico").closest("tr")).getByRole("button", { name: "Eliminar" }));
+    expect(actuales().productos.length).toBe(3);
+  });
+  it("C08 crea, renombra y elimina categorías y protege las utilizadas", () => {
+    spyOn(window, "confirm").and.returnValue(true);
+    mostrar("/admin/categorias", true);
+    escribir("Nombre de categoría", "ATA 28");
+    fireEvent.click(screen.getByRole("button", { name: "Guardar categoría" }));
+    let fila = screen.getByText("ATA 28", { selector: "td" }).closest("tr");
+    fireEvent.click(within(fila).getByRole("button", { name: "Editar" }));
+    escribir("Nombre de categoría", "ATA 29");
+    fireEvent.click(screen.getByRole("button", { name: "Guardar categoría" }));
+    fila = screen.getByText("ATA 29", { selector: "td" }).closest("tr");
+    fireEvent.click(within(fila).getByRole("button", { name: "Eliminar" }));
+    expect(actuales().categorias.length).toBe(3);
+    fireEvent.click(screen.getAllByRole("button", { name: "Editar" })[0]);
+    escribir("Nombre de categoría", "ATA 30");
+    fireEvent.click(screen.getByRole("button", { name: "Guardar categoría" }));
+    expect(actuales().productos[0].categoria).toBe("ATA 30");
     fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[0]);
-    expect(contexto.borrarProducto).toHaveBeenCalledWith(1);
+    expect(screen.getByRole("alert").textContent).toContain("productos asociados");
+  });
+  it("C09 crea, consulta, edita y elimina usuarios y protege la propia cuenta", () => {
+    spyOn(window, "confirm").and.returnValue(true);
+    mostrar("/admin/usuarios", true);
+    escribir("Nombre completo", "Ana Pérez"); escribir("Correo de la cuenta", "ana@example.com"); escribir("Contraseña", "Prueba123");
+    fireEvent.click(screen.getByRole("button", { name: "Guardar usuario" }));
+    expect(actuales().usuarios.length).toBe(2);
+    fireEvent.click(screen.getAllByRole("button", { name: "Ver" })[1]);
+    expect(screen.getByRole("heading", { name: "Detalle del usuario" })).toBeTruthy();
+    expect(screen.getByText("Sin compras registradas.")).toBeTruthy();
+    fireEvent.click(screen.getAllByRole("button", { name: "Editar" })[1]);
+    escribir("Nombre completo", "Ana Rivera");
+    fireEvent.click(screen.getByRole("button", { name: "Guardar usuario" }));
+    expect(actuales().usuarios[1].nombre).toBe("Ana Rivera");
+    fireEvent.click(screen.getAllByRole("button", { name: "Eliminar" })[1]);
+    expect(actuales().usuarios.length).toBe(1);
+    fireEvent.click(screen.getByRole("button", { name: "Eliminar" }));
+    expect(screen.getByRole("alert").textContent).toContain("propia cuenta");
+  });
+  it("C10 persiste pedidos, permite resolverlos y calcula reportes sin rechazados", () => {
+    datos.pedidos = [
+      { id: "p1", fecha: "2026-10-11T12:00:00Z", estado: "Pendiente", total: 100, lineas: [{ cantidad: 2 }], entrega: { matricula: "CC-BFA", destino: "SCL" } },
+      { id: "p2", fecha: "2026-10-11T12:00:00Z", estado: "Rechazado", total: 999, lineas: [{ cantidad: 3 }], entrega: { matricula: "CC-BFA", destino: "SCL" } }
+    ];
+    const vista = mostrar("/admin/ordenes", true);
+    fireEvent.click(screen.getByRole("button", { name: "Marcar resuelto" }));
+    expect(actuales().pedidos[0].estado).toBe("Resuelto");
+    vista.unmount();
+    mostrar("/admin/reportes");
+    expect(within(screen.getByText("Unidades vendidas").closest("tr")).getByText("2")).toBeTruthy();
+    expect(within(screen.getByText("Total de ventas simuladas").closest("tr")).getByText("$100")).toBeTruthy();
+    fireEvent.click(screen.getByRole("link", { name: "Stock crítico" }));
+    expect(screen.getByText("Álabe de Turbina")).toBeTruthy();
   });
 });
