@@ -1,0 +1,39 @@
+{
+  "name": "skyops-v3",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "karma start karma.conf.cjs --single-run",
+    "test:watch": "karma start karma.conf.cjs --no-single-run",
+    "test:coverage": "karma start karma.conf.cjs --single-run"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.6",
+    "react": "^19.1.0",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.0",
+    "@babel/preset-env": "^7.27.0",
+    "@babel/preset-react": "^7.27.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.3.0",
+    "@vitejs/plugin-react": "^4.5.0",
+    "babel-loader": "^9.2.1",
+    "babel-plugin-istanbul": "^7.0.0",
+    "jasmine-core": "^5.7.1",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.1",
+    "karma-jasmine": "^5.1.0",
+    "karma-webpack": "^5.0.1",
+    "vite": "^7.0.0",
+    "webpack": "^5.99.0"
+  }
+}
