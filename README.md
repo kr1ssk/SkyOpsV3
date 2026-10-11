@@ -78,3 +78,16 @@ navegador y no envía correo. Resolver un pedido no certifica una aeronave.
 
 GitHub Actions ejecuta las pruebas y la compilación en cada actualización.
 La cobertura queda disponible como artefacto de la ejecución.
+
+## Resultados de verificación
+
+El 11 de octubre de 2026 se comprobaron:
+
+- **26 pruebas aprobadas** con Jasmine y Karma.
+- **Compilación de producción correcta** con Vite.
+- Cobertura de líneas: **60,22 %**.
+
+[Ver ejecución y descargar cobertura](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166501028).
+
+Las comprobaciones visuales en distintos tamaños de pantalla se registran
+por separado en el informe de pruebas.
