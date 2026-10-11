@@ -1,0 +1,36 @@
+name: Verificar SkyOps
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Instalar dependencias
+        run: npm install --no-audit --no-fund
+
+      - name: Ejecutar pruebas y cobertura
+        run: npm test
+        env:
+          CHROME_BIN: /usr/bin/google-chrome
+
+      - name: Compilar proyecto
+        run: npm run build
+
+      - name: Guardar cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-skyops
+          path: coverage/
+          if-no-files-found: ignore
