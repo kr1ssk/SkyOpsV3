@@ -90,7 +90,7 @@ El 11 de octubre de 2026 se ejecutaron 26 pruebas con Jasmine y Karma:
 12 de reglas de negocio y 14 de componentes. Todas aprobaron y la
 compilación de producción terminó correctamente.
 
-[Evidencia de ejecución](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166501028).
+[Evidencia de ejecución](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166824417).
 
 Las pruebas de componentes cubren búsqueda y ofertas (RF02–RF03),
 carrito (RF05), validación del checkout (RF07), creación, edición y

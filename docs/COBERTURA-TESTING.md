@@ -78,8 +78,8 @@ https://github.com/kr1ssk/SkyOpsV3/actions
 
 - Pruebas: Jasmine y Karma con Chrome Headless 154.
 - Entorno: Ubuntu 24.04, Node.js 24.21.0 y npm 11.19.0.
-- Código verificado: commit a6e8229d4b0dbf417285a76e65898b60ec411fe8.
-- [Ejecución y registros](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166501028).
+- Código verificado: commit 5c38de93d613f479d982465eef900f435736775a.
+- [Ejecución y registros](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166824417).
 
 La primera ejecución detectó imports sin extensión incompatibles con
 webpack en módulos ES. Se corrigieron y la siguiente ejecución pasó.
@@ -124,3 +124,11 @@ Comando: npm run build.
 
 **Resultado:** compilación correcta con Vite en la ejecución enlazada.
 El flujo automático ejecuta la compilación después de las pruebas.
+
+## Verificación de instalación reproducible
+
+La ejecución final utilizó npm ci con el package-lock.json publicado.
+Instalación, 26 pruebas y compilación finalizaron correctamente.
+La cobertura se mantuvo en los valores de la tabla anterior.
+
+[Ejecución final](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166824417).

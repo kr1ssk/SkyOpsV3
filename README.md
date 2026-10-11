@@ -92,7 +92,7 @@ El 11 de octubre de 2026 se comprobaron:
 - **Compilación de producción correcta** con Vite.
 - Cobertura de líneas: **60,22 %**.
 
-[Ver ejecución y descargar cobertura](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166501028).
+[Ver ejecución y descargar cobertura](https://github.com/kr1ssk/SkyOpsV3/actions/runs/38166824417).
 
 Las comprobaciones visuales en distintos tamaños de pantalla se registran
 por separado en el informe de pruebas.
