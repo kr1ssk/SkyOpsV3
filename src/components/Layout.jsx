@@ -56,8 +56,8 @@ export default function Layout() {
 
               <Nav.Link as={NavLink} to="/ofertas" eventKey="ofertas">Ofertas</Nav.Link>
               <NavDropdown title="Información" id="menu-informacion">
-                <NavDropdown.Item as={Link} to="/nosotros">Nosotros</NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/blog">Blog</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/nosotros" eventKey="nosotros">Nosotros</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/blog" eventKey="blog">Blog</NavDropdown.Item>
               </NavDropdown>
               {usuario?.rol === "admin" && <Nav.Link as={NavLink} to="/admin" eventKey="admin">Administración</Nav.Link>}
               <Nav.Link as={NavLink} to={usuario ? "/perfil" : "/login"} eventKey="cuenta">{usuario ? "Mi perfil" : "Iniciar sesión"}</Nav.Link>
