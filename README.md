@@ -15,7 +15,7 @@ preparar un manifiesto de compra y completar un checkout simulado.
 Requisitos: Node.js 24 y npm. Google Chrome para ejecutar las pruebas.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -76,8 +76,13 @@ navegador y no envía correo. Resolver un pedido no certifica una aeronave.
 - [ERS V2](docs/ERS-V2.md).
 - [Informe de pruebas y cobertura](docs/COBERTURA-TESTING.md).
 
-GitHub Actions ejecuta las pruebas y la compilación en cada actualización.
+GitHub Actions ejecuta las pruebas y la compilación en cada cambio de código.
 La cobertura queda disponible como artefacto de la ejecución.
+Los cambios exclusivamente en Markdown no repiten las pruebas.
+
+package-lock.json conserva las versiones verificadas. npm ci instala esas
+versiones. Si agregas una dependencia con npm install, sube también el
+package-lock.json actualizado.
 
 ## Resultados de verificación
 
